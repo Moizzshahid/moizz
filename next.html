@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebCMD</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: #c0c0c0;
+            font-family: 'Courier New', monospace;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.4;
+        }
+        .terminal {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .title-bar {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .dots {
+            display: flex;
+            margin-right: 10px;
+        }
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+        .red { background-color: #ff5f56; }
+        .yellow { background-color: #ffbd2e; }
+        .green { background-color: #27c93f; }
+        .prompt {
+            color: #4caf50;
+        }
+        .input-line {
+            display: flex;
+        }
+        .input-line input {
+            flex-grow: 1;
+            background: transparent;
+            border: none;
+            color: #c0c0c0;
+            font-family: 'Courier New', monospace;
+            font-size: 1em;
+            outline: none;
+        }
+        .version {
+            color: #777;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="terminal">
+        <div class="title-bar">
+            <div class="dots">
+                <div class="dot red"></div>
+                <div class="dot yellow"></div>
+                <div class="dot green"></div>
+            </div>
+            <div>WebCMD</div>
+        </div>
+        <div class="version">Moizz CMD v3.0.1 - A minimal command-line interface in your browser</div>
+        <div id="output">
+            <div>Type "help" for a list of available commands.</div>
+            <div>Type "start" to begin.</div>
+        </div>
+        <div class="input-line">
+            <span class="prompt">></span>
+            <input type="text" id="command-input" autofocus>
+        </div>
+    </div>
+
+    <script>
+        const output = document.getElementById('output');
+        const commandInput = document.getElementById('command-input');
+        let sessionActive = false;
+
+        // Command definitions
+        const commands = {
+            start: {
+                desc: "Start the session",
+                execute: () => {
+                    sessionActive = true;
+                    return "Session started. Type 'help' for commands.";
+                }
+            },
+            close: {
+                desc: "Close the session",
+                execute: () => {
+                    sessionActive = false;
+                    return "Session closed. Type 'start' to begin again.";
+                }
+            },
+            help: {
+                desc: "Show available commands",
+                execute: () => {
+                    let helpText = "Available commands:<br>";
+                    for (const [cmd, info] of Object.entries(commands)) {
+                        helpText += `- ${cmd}: ${info.desc}<br>`;
+                    }
+                    return helpText;
+                }
+            },
+            time: {
+                desc: "Show current time",
+                execute: () => {
+                    return new Date().toLocaleTimeString();
+                }
+            },
+            date: {
+                desc: "Show current date",
+                execute: () => {
+                    return new Date().toLocaleDateString();
+                }
+            },
+            location: {
+                desc: "Show current location",
+                execute: () => {
+                    return "Karachi, Pakistan";
+                }
+            },
+            math: {
+                desc: "Do simple math (e.g., 'math 2+2')",
+                execute: (args) => {
+                    if (!args) return "Please provide an expression (e.g., 'math 2+2')";
+                    try {
+                        return eval(args.join(' '));
+                    } catch {
+                        return "Invalid math expression";
+                    }
+                }
+            },
+            echo: {
+                desc: "Repeat back the input",
+                execute: (args) => {
+                    return args.join(' ');
+                }
+            },
+            describe: {
+                desc: "Describe something",
+                execute: (args) => {
+                    if (!args.length) return "Please provide something to describe";
+                    const things = {
+                        you: "I am a simple command-line interface.",
+                        me: "You are an awesome person using this interface!",
+                        this: "This is a minimal CMD-like interface in your browser.",
+                        karachi: "Karachi is the largest city in Pakistan and a major economic hub.",
+                        pakistan: "Pakistan is a country in South Asia with a rich cultural heritage."
+                    };
+                    const thing = args[0].toLowerCase();
+                    return things[thing] || `I don't know how to describe "${thing}"`;
+                }
+            },
+            joke: {
+                desc: "Tell a joke",
+                execute: () => {
+                    const jokes = [
+                        "Why don't scientists trust atoms? Because they make up everything!",
+                        "Did you hear about the mathematician who's afraid of negative numbers? He'll stop at nothing to avoid them.",
+                        "Why don't skeletons fight each other? They don't have the guts.",
+                        "I'm reading a book about anti-gravity. It's impossible to put down!",
+                        "Why did the scarecrow win an award? Because he was outstanding in his field!"
+                    ];
+                    return jokes[Math.floor(Math.random() * jokes.length)];
+                }
+            },
+            clear: {
+                desc: "Clear the screen",
+                execute: () => {
+                    output.innerHTML = '';
+                    return '';
+                }
+            },
+            weather: {
+                desc: "Get weather information",
+                execute: () => {
+                    return "Weather in Karachi: Usually sunny and hot (25-35°C)";
+                }
+            },
+            version: {
+                desc: "Show version information",
+                execute: () => {
+                    return "WebCMD v1.0 - Minimal command-line interface";
+                }
+            },
+            about: {
+                desc: "About this interface",
+                execute: () => {
+                    return "This is a minimal CMD-like interface built with HTML, CSS, and JavaScript.";
+                }
+            },
+            color: {
+                desc: "Change text color (e.g., 'color green')",
+                execute: (args) => {
+                    const colors = {
+                        red: "#ff5555",
+                        green: "#55ff55",
+                        blue: "#5555ff",
+                        yellow: "#ffff55",
+                        reset: "#c0c0c0"
+                    };
+                    const color = args[0] || 'reset';
+                    if (colors[color]) {
+                        document.body.style.color = colors[color];
+                        return `Text color changed to ${color}`;
+                    }
+                    return `Invalid color. Available: ${Object.keys(colors).join(', ')}`;
+                }
+            },
+            greet: {
+                desc: "Greet the user",
+                execute: () => {
+                    const hours = new Date().getHours();
+                    if (hours < 12) return "Good morning!";
+                    if (hours < 18) return "Good afternoon!";
+                    return "Good evening!";
+                }
+            },
+            reverse: {
+                desc: "Reverse the input text",
+                execute: (args) => {
+                    return args.join(' ').split('').reverse().join('');
+                }
+            },
+            uppercase: {
+                desc: "Convert text to uppercase",
+                execute: (args) => {
+                    return args.join(' ').toUpperCase();
+                }
+            },
+            lowercase: {
+                desc: "Convert text to lowercase",
+                execute: (args) => {
+                    return args.join(' ').toLowerCase();
+                }
+            },
+            count: {
+                desc: "Count the number of words",
+                execute: (args) => {
+                    return `Word count: ${args.length}`;
+                }
+            },
+            quote: {
+                desc: "Show a random quote",
+                execute: () => {
+                    const quotes = [
+                        "The only way to do great work is to love what you do. - Steve Jobs",
+                        "Innovation distinguishes between a leader and a follower. - Steve Jobs",
+                        "Stay hungry, stay foolish. - Steve Jobs",
+                        "Your time is limited, don't waste it living someone else's life. - Steve Jobs",
+                        "Simplicity is the ultimate sophistication. - Leonardo da Vinci"
+                    ];
+                    return quotes[Math.floor(Math.random() * quotes.length)];
+                }
+            },
+            ping: {
+                desc: "Test responsiveness",
+                execute: () => {
+                    return "Pong!";
+                }
+            },
+            todo: {
+                desc: "Simple todo list (add, list, clear)",
+                execute: (args) => {
+                    if (!window.todos) window.todos = [];
+                    
+                    if (args[0] === 'add' && args.length > 1) {
+                        window.todos.push(args.slice(1).join(' '));
+                        return `Added: ${args.slice(1).join(' ')}`;
+                    } else if (args[0] === 'list') {
+                        if (window.todos.length === 0) return "Your todo list is empty.";
+                        return window.todos.map((t, i) => `${i+1}. ${t}`).join('<br>');
+                    } else if (args[0] === 'clear') {
+                        window.todos = [];
+                        return "Todo list cleared.";
+                    }
+                    return "Usage: todo [add|list|clear]";
+                }
+            },
+            fact: {
+                desc: "Show a random fact",
+                execute: () => {
+                    const facts = [
+                        "Honey never spoils. Archaeologists have found pots of honey in ancient Egyptian tombs that are over 3,000 years old and still perfectly good to eat.",
+                        "The shortest war in history was between Britain and Zanzibar on August 27, 1896. Zanzibar surrendered after 38 minutes.",
+                        "A group of flamingos is called a 'flamboyance'.",
+                        "The inventor of the frisbee was turned into a frisbee after he died.",
+                        "Octopuses have three hearts, nine brains, and blue blood."
+                    ];
+                    return facts[Math.floor(Math.random() * facts.length)];
+                }
+            },
+            calc: {
+                desc: "Simple calculator (e.g., 'calc 5*5')",
+                execute: (args) => {
+                    if (!args.length) return "Please provide an expression (e.g., 'calc 5*5')";
+                    try {
+                        return eval(args.join(' '));
+                    } catch {
+                        return "Invalid calculation";
+                    }
+                }
+            },
+            rps: {
+                desc: "Play rock-paper-scissors",
+                execute: (args) => {
+                    const choices = ['rock', 'paper', 'scissors'];
+                    const userChoice = args[0] ? args[0].toLowerCase() : null;
+                    
+                    if (!userChoice || !choices.includes(userChoice)) {
+                        return "Please choose rock, paper, or scissors";
+                    }
+                    
+                    const computerChoice = choices[Math.floor(Math.random() * 3)];
+                    let result;
+                    
+                    if (userChoice === computerChoice) {
+                        result = "It's a tie!";
+                    } else if (
+                        (userChoice === 'rock' && computerChoice === 'scissors') ||
+                        (userChoice === 'paper' && computerChoice === 'rock') ||
+                        (userChoice === 'scissors' && computerChoice === 'paper')
+                    ) {
+                        result = "You win!";
+                    } else {
+                        result = "Computer wins!";
+                    }
+                    
+                    return `You chose ${userChoice}, computer chose ${computerChoice}. ${result}`;
+                }
+            }
+        };
+
+        // Handle command input
+        commandInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const input = commandInput.value.trim();
+                commandInput.value = '';
+                
+                // Add the command to output
+                addToOutput(`<span class="prompt">></span> ${input}`);
+                
+                if (!input) return;
+                
+                const parts = input.split(' ');
+                const cmd = parts[0].toLowerCase();
+                const args = parts.slice(1);
+                
+                // Special case for echo close
+                if (cmd === 'echo' && args[0] === 'close') {
+                    sessionActive = false;
+                    addToOutput("Session closed. Type 'start' to begin again.");
+                    return;
+                }
+                
+                // Check if session is active (except for start and help commands)
+                if (!sessionActive && cmd !== 'start' && cmd !== 'help') {
+                    addToOutput("Session not active. Type 'start' to begin.");
+                    return;
+                }
+                
+                // Execute command
+                if (commands[cmd]) {
+                    const result = commands[cmd].execute(args);
+                    if (result) addToOutput(result);
+                } else {
+                    addToOutput(`Command not found: ${cmd}. Type 'help' for available commands.`);
+                }
+            }
+        });
+
+        function addToOutput(text) {
+            if (text) {
+                const div = document.createElement('div');
+                div.innerHTML = text;
+                output.appendChild(div);
+                output.scrollTop = output.scrollHeight;
+            }
+        }
+    </script>
+</body>
+</html>

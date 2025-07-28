@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Login Page</title>
+    <link rel="shortcut icon" href="tittle.png" type="image/x-icon">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background-image: url('background.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            height: 100vh;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding-right: 100px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 1. Bigger M-logo with shadow */
+        .m-logo {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            width: 80px;
+            height: 80px;
+            filter: drop-shadow(0 2px 5px rgba(0,0,0,0.2));
+            transition: transform 0.3s;
+        }
+        .m-logo:hover {
+            transform: scale(1.05);
+        }
+
+        /* 2. Enhanced glass morphism effect */
+        .login-box {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(25px) saturate(180%);
+            -webkit-backdrop-filter: blur(25px) saturate(180%);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 40px;
+            width: 420px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+            transform-style: preserve-3d;
+            transform: perspective(1000px);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .login-box:hover {
+            transform: perspective(1000px) rotateY(2deg) rotateX(1deg);
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.2);
+        }
+
+        /* 3. Premium login header */
+        .login-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 35px;
+            position: relative;
+        }
+        .login-header img {
+            width: 50px;
+            margin-right: 15px;
+            filter: drop-shadow(0 2px 3px rgba(0,0,0,0.1));
+        }
+        .login-header h1 {
+            color: #222;
+            font-weight: 700;
+            font-size: 28px;
+            letter-spacing: -0.5px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        /* 4. Modern input fields */
+        .input-group {
+            margin-bottom: 24px;
+            position: relative;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: #444;
+            font-weight: 500;
+            font-size: 15px;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 15px 18px;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            border-radius: 12px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.6);
+            transition: all 0.3s;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.03);
+        }
+        .input-group input:focus {
+            outline: none;
+            border-color: rgba(76, 175, 80, 0.5);
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1), inset 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        /* 5. Improved buttons */
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            gap: 15px;
+        }
+        .button-group button {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .back-btn {
+            background-color: rgba(241, 241, 241, 0.7);
+            color: #333;
+        }
+        .back-btn:hover {
+            background-color: rgba(225, 225, 225, 0.8);
+            transform: translateY(-1px);
+        }
+        .continue-btn {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            box-shadow: 0 4px 10px rgba(76, 175, 80, 0.3);
+        }
+        .continue-btn:hover {
+            background: linear-gradient(135deg, #45a049, #3d8b40);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 15px rgba(76, 175, 80, 0.4);
+        }
+
+        /* 6. Animated divider */
+        .divider {
+            text-align: center;
+            margin: 28px 0;
+            color: #777;
+            position: relative;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        .divider::before, .divider::after {
+            content: "";
+            display: inline-block;
+            width: 30%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(0,0,0,0.1), transparent);
+            position: absolute;
+            top: 50%;
+            transition: all 0.3s;
+        }
+        .divider::before {
+            left: 0;
+        }
+        .divider::after {
+            right: 0;
+        }
+        .divider:hover::before, .divider:hover::after {
+            width: 35%;
+        }
+
+        /* 7. Enhanced social buttons */
+        .social-login {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .social-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .social-btn img {
+            width: 28px;
+            margin-right: 12px;
+            transition: transform 0.3s;
+        }
+        .social-btn:hover img {
+            transform: scale(1.1);
+        }
+        .social-btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(255,255,255,0.1), rgba(255,255,255,0));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .social-btn:hover::after {
+            opacity: 1;
+        }
+        .google-btn {
+            background-color: rgba(255, 255, 255, 0.8);
+            color: #333;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .google-btn:hover {
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-1px);
+        }
+        .facebook-btn {
+            background: linear-gradient(135deg, #3b5998, #344e86);
+            color: white;
+            box-shadow: 0 4px 10px rgba(59, 89, 152, 0.3);
+        }
+        .facebook-btn:hover {
+            background: linear-gradient(135deg, #344e86, #2d4373);
+            box-shadow: 0 6px 15px rgba(59, 89, 152, 0.4);
+            transform: translateY(-1px);
+        }
+
+        /* 8. Modern error message */
+        .error-message {
+            color: #ffc6c6e5;
+            font-size: 14px;
+            text-align: center;
+            margin-top: 12px;
+            height: 20px;
+            font-weight: 500;
+            text-shadow: 0 1px 1px rgba(255,0,0,0.05);
+            opacity: 0;
+            transform: translateY(-5px);
+            transition: all 0.3s;
+        }
+        .error-message.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* 9. Premium modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .modal.show {
+            display: flex;
+            opacity: 1;
+        }
+        .modal-content {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 35px 40px;
+            border-radius: 24px;
+            text-align: center;
+            max-width: 380px;
+            width: 90%;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transform: scale(0.9);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .modal.show .modal-content {
+            transform: scale(1);
+        }
+        .modal-content p {
+            margin-bottom: 28px;
+            font-size: 18px;
+            color: #333;
+            font-weight: 500;
+            line-height: 1.5;
+        }
+        .modal-btn {
+            padding: 14px 28px;
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(76, 175, 80, 0.3);
+        }
+        .modal-btn:hover {
+            background: linear-gradient(135deg, #45a049, #3d8b40);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 15px rgba(76, 175, 80, 0.4);
+        }
+
+        /* 10. Floating particles background */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        .particle {
+            position: absolute;
+            background: rgba(255,255,255,0.6);
+            border-radius: 50%;
+            filter: blur(1px);
+            animation: float 15s infinite linear;
+        }
+
+        /* 11. Responsive design */
+        @media (max-width: 768px) {
+            body {
+                padding-right: 20px;
+                padding-left: 20px;
+                justify-content: center;
+            }
+            .login-box {
+                width: 100%;
+                max-width: 400px;
+                padding: 30px;
+            }
+            .m-logo {
+                width: 60px;
+                height: 60px;
+                top: 20px;
+                left: 20px;
+            }
+        }
+
+        /* 12. Animations */
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-1000px) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* 13. Password toggle */
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 42px;
+            cursor: pointer;
+            color: #777;
+            font-size: 18px;
+        }
+
+        /* 14. Loading spinner */
+        .spinner {
+            display: none;
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 10px;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* 15. Ripple effect */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.4);
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+            pointer-events: none;
+        }
+        @keyframes ripple {
+            to {
+                transform: scale(2.5);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 1. Bigger M-logo with PNG format -->
+    <img src="M-logo.png" alt="M Logo" class="m-logo">
+
+    <!-- 16. Floating particles -->
+    <div class="particles" id="particles"></div>
+
+    <div class="login-box">
+        <!-- 2. Login logo with PNG format -->
+        <div class="login-header">
+            <img src="login-logo.png" alt="Login Logo">
+            <h1>LOGIN</h1>
+        </div>
+        
+        <div class="input-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" placeholder="name">
+        </div>
+        
+        <div class="input-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" placeholder="Password">
+            <!-- 13. Password toggle -->
+            <span class="password-toggle" id="togglePassword">👁️</span>
+        </div>
+        
+        <!-- 8. Modern error message -->
+        <div class="error-message" id="errorMessage"></div>
+        
+        <div class="button-group">
+            <button class="back-btn" id="backBtn">Back</button>
+            <button class="continue-btn" id="continueBtn">
+                Continue
+                <!-- 14. Loading spinner -->
+                <div class="spinner" id="spinner"></div>
+            </button>
+        </div>
+        
+        <div class="divider">or</div>
+        
+        <div class="social-login">
+            <!-- 3. Google logo with PNG format -->
+            <button class="social-btn google-btn" id="googleBtn">
+                <img src="google.png" alt="Google logo">
+                Sign up with Google
+            </button>
+            <!-- 4. Facebook logo with PNG format -->
+            <button class="social-btn facebook-btn" id="facebookBtn">
+                <img src="facebook.png" alt="Facebook logo">
+                Sign up with Facebook
+            </button>
+        </div>
+    </div>
+
+    <!-- 9. Premium modal -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <p>Server busy please try again</p>
+            <button class="modal-btn" id="modalBtn">Cancel</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const continueBtn = document.getElementById('continueBtn');
+            const backBtn = document.getElementById('backBtn');
+            const googleBtn = document.getElementById('googleBtn');
+            const facebookBtn = document.getElementById('facebookBtn');
+            const modal = document.getElementById('modal');
+            const modalBtn = document.getElementById('modalBtn');
+            const errorMessage = document.getElementById('errorMessage');
+            const togglePassword = document.getElementById('togglePassword');
+            const passwordInput = document.getElementById('password');
+            const spinner = document.getElementById('spinner');
+            const particlesContainer = document.getElementById('particles');
+
+            // 1. Password validation with loading
+            continueBtn.addEventListener('click', function(e) {
+                const password = passwordInput.value;
+                const correctPassword = "moiz@secure.2000!";
+                
+                // Show loading spinner
+                spinner.style.display = 'block';
+                continueBtn.disabled = true;
+                
+                // Simulate network delay
+                setTimeout(() => {
+                    if (password === correctPassword) {
+                        window.location.href = "storage.html";
+                    } else {
+                        errorMessage.textContent = "Password is incorrect";
+                        errorMessage.classList.add('show');
+                        spinner.style.display = 'none';
+                        continueBtn.disabled = false;
+                    }
+                }, 800);
+            });
+
+            // 2. Back button clears form
+            backBtn.addEventListener('click', function() {
+                document.getElementById('name').value = "";
+                passwordInput.value = "";
+                errorMessage.textContent = "";
+                errorMessage.classList.remove('show');
+            });
+
+            // 3. Social buttons show modal
+            googleBtn.addEventListener('click', function(e) {
+                createRipple(e);
+                modal.classList.add('show');
+            });
+
+            facebookBtn.addEventListener('click', function(e) {
+                createRipple(e);
+                modal.classList.add('show');
+            });
+
+            // 4. Modal button redirects to Google
+            modalBtn.addEventListener('click', function() {
+                modal.classList.remove('show');
+                setTimeout(() => {
+                    window.location.href = "https://google.com";
+                }, 300);
+            });
+
+            // 5. Close modal when clicking outside
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.classList.remove('show');
+                    setTimeout(() => {
+                        window.location.href = "https://google.com";
+                    }, 300);
+                }
+            });
+
+            // 6. Password toggle visibility
+            togglePassword.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                this.textContent = type === 'password' ? '👁️' : '🔒';
+            });
+
+            // 7. Create ripple effect on buttons
+            function createRipple(event) {
+                const button = event.currentTarget;
+                const ripple = document.createElement('span');
+                ripple.classList.add('ripple');
+                
+                const diameter = Math.max(button.clientWidth, button.clientHeight);
+                const radius = diameter / 2;
+                
+                ripple.style.width = ripple.style.height = `${diameter}px`;
+                ripple.style.left = `${event.clientX - button.getBoundingClientRect().left - radius}px`;
+                ripple.style.top = `${event.clientY - button.getBoundingClientRect().top - radius}px`;
+                
+                button.appendChild(ripple);
+                
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            }
+
+            // Add ripple to all buttons
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(button => {
+                button.addEventListener('click', createRipple);
+            });
+
+            // 8. Create floating particles
+            function createParticles() {
+                const particleCount = 20;
+                for (let i = 0; i < particleCount; i++) {
+                    const particle = document.createElement('div');
+                    particle.classList.add('particle');
+                    
+                    const size = Math.random() * 10 + 5;
+                    const posX = Math.random() * window.innerWidth;
+                    const delay = Math.random() * 15;
+                    const duration = Math.random() * 10 + 10;
+                    
+                    particle.style.width = `${size}px`;
+                    particle.style.height = `${size}px`;
+                    particle.style.left = `${posX}px`;
+                    particle.style.bottom = `-${size}px`;
+                    particle.style.animationDelay = `${delay}s`;
+                    particle.style.animationDuration = `${duration}s`;
+                    
+                    particlesContainer.appendChild(particle);
+                }
+            }
+
+            createParticles();
+        });
+    </script>
+</body>
+</html>

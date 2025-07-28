@@ -1,0 +1,1251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moizz Studio | Digital Hub</title>
+    <style>
+        /* 1. Modern CSS Variables */
+        :root {
+            --primary: #00b7ff;
+            --primary-dark: #0086e0;
+            --primary-light: #3385ff;
+            --bg-dark: #121212;
+            --bg-darker: #0a0a0a;
+            --bg-light: #1e1e1e;
+            --text: #e0e0e0;
+            --text-muted: #aaaaaa;
+            --accent: #00ffbf;
+            --danger: #ff4757;
+            --success: #2ed5d5;
+            --border-radius: 12px;
+            --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --gradient: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+        }
+
+        /* 2. Smooth Scroll Behavior */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* 3. Modern Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* 4. Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-darker);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 5px;
+        }
+
+        /* 5. Header with Glass Morphism */
+        header {
+            background: rgba(18, 18, 18, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            padding: 15px 0;
+            transition: var(--transition);
+        }
+
+        header.scrolled {
+            padding: 10px 0;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 30px;
+        }
+
+        /* 6. Animated Logo */
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--gradient);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            transition: var(--transition);
+        }
+
+        .logo:hover .logo-icon {
+            transform: rotate(15deg) scale(1.1);
+        }
+
+        .logo-text {
+            font-size: 22px;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        /* 7. Modern Navigation */
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+
+        nav ul li a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+            position: relative;
+            padding: 5px 0;
+            transition: var(--transition);
+        }
+
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: var(--transition);
+        }
+
+        nav ul li a:hover {
+            color: var(--primary);
+        }
+
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+
+        /* 8. Mobile Menu Button (hidden by default) */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        /* 9. Main Content with Padding */
+        main {
+            margin-top: 80px;
+            padding: 40px 30px;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* 10. Section Titles with Decorative Elements */
+        .section-title {
+            position: relative;
+            margin-bottom: 50px;
+            text-align: center;
+            font-size: 2.2rem;
+            font-weight: 700;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background: var(--gradient);
+            margin: 15px auto;
+            border-radius: 2px;
+        }
+
+        /* 11. Modern Card Grid */
+        .boxes-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 80px;
+        }
+
+        /* 12. 3D Card Effect */
+        .box {
+            background: var(--bg-light);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            transition: var(--transition);
+            border-left: 4px solid var(--primary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 107, 0, 0.1) 0%, rgba(0, 200, 150, 0.1) 100%);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .box:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--box-shadow);
+        }
+
+        .box:hover::before {
+            opacity: 1;
+        }
+
+        /* 13. Icon with Gradient Background */
+        .box-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 22px;
+            background: var(--gradient);
+            color: white;
+        }
+
+        .box h3 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .box p {
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            font-size: 15px;
+        }
+
+        /* 14. Modern Button with Hover Effect */
+        .box-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 20px;
+            background: var(--gradient);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            text-decoration: none;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .box-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--accent) 100%);
+            opacity: 0;
+            transition: var(--transition);
+            z-index: -1;
+        }
+
+        .box-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 0, 0.3);
+        }
+
+        .box-btn:hover::before {
+            opacity: 1;
+        }
+
+        .box-btn i {
+            margin-left: 8px;
+            transition: var(--transition);
+        }
+
+        .box-btn:hover i {
+            transform: translateX(3px);
+        }
+
+        /* 15. About Section with Flex Layout */
+        .about-section {
+            background: var(--bg-light);
+            border-radius: var(--border-radius);
+            padding: 50px;
+            margin-bottom: 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-section::after {
+            content: '';
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(255, 107, 0, 0.1) 0%, rgba(255, 107, 0, 0) 70%);
+            border-radius: 50%;
+        }
+
+        .about-content {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* 16. Profile Image with Border Animation */
+        .about-image {
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .about-image img {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid var(--bg-light);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: var(--transition);
+        }
+
+        .about-image::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            border-radius: 50%;
+            background: var(--gradient);
+            z-index: -1;
+            animation: rotateBorder 6s linear infinite;
+            opacity: 0.7;
+        }
+
+        @keyframes rotateBorder {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .about-text h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+        }
+
+        .about-text p {
+            margin-bottom: 15px;
+            color: var(--text-muted);
+        }
+
+        /* 17. Info Grid in About Section */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-item i {
+            color: var(--primary);
+            font-size: 18px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: rgba(0, 102, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 18. Social Media Section with Hover Effects */
+        .social-section {
+            margin-bottom: 80px;
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .social-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text);
+            transition: var(--transition);
+            width: 80px;
+        }
+
+        .social-icon:hover {
+            transform: translateY(-5px);
+        }
+
+        .social-icon-box {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            margin-bottom: 10px;
+            transition: var(--transition);
+        }
+
+        .social-icon:hover .social-icon-box {
+            transform: rotate(10deg) scale(1.1);
+        }
+
+        .instagram {
+            background: linear-gradient(45deg, #405de6, #5851db, #833ab4, #c13584, #e1306c, #fd1d1d);
+            color: white;
+        }
+
+        .facebook {
+            background: #1877f2;
+            color: white;
+        }
+
+        .email {
+            background: linear-gradient(45deg, #ea4335, #4285f4);
+            color: white;
+        }
+
+        .youtube {
+            background: #ff0000;
+            color: white;
+        }
+
+        .social-icon span {
+            font-size: 14px;
+            color: var(--text-muted);
+            transition: var(--transition);
+        }
+
+        .social-icon:hover span {
+            color: var(--primary);
+        }
+
+        /* 19. Footer with Gradient Border */
+        footer {
+            background: var(--bg-darker);
+            padding: 60px 0 30px;
+            position: relative;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient);
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .footer-logo {
+            margin-bottom: 30px;
+        }
+
+        .footer-logo img {
+            height: 50px;
+            filter: brightness(0) invert(1);
+            opacity: 0.8;
+            transition: var(--transition);
+        }
+
+        .footer-logo:hover img {
+            opacity: 1;
+            transform: scale(1.05);
+        }
+
+        .footer-text {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        .copyright {
+            color: var(--text-muted);
+            font-size: 13px;
+            text-align: center;
+        }
+
+        /* 20. Modern Modal Design */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.show {
+            opacity: 1;
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-light);
+            padding: 40px;
+            border-radius: var(--border-radius);
+            max-width: 450px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            box-shadow: var(--box-shadow);
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal.show .modal-content {
+            transform: translateY(0);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: var(--transition);
+        }
+
+        .close-btn:hover {
+            color: var(--danger);
+            transform: rotate(90deg);
+        }
+
+        .modal-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .modal h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: white;
+        }
+
+        .modal p {
+            color: var(--text-muted);
+            margin-bottom: 25px;
+        }
+
+        .modal-btn {
+            padding: 12px 25px;
+            background: var(--gradient);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .modal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 0, 0.3);
+        }
+
+        /* 21. Responsive Design */
+        @media (max-width: 992px) {
+            .boxes-container {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            /* Mobile Menu Styles */
+            .menu-toggle {
+                display: block;
+            }
+
+            nav {
+                position: fixed;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background: var(--bg-darker);
+                padding: 20px;
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+                transform: translateY(-150%);
+                opacity: 0;
+                transition: var(--transition);
+                z-index: 999;
+            }
+
+            nav.active {
+                transform: translateY(0);
+                opacity: 1;
+            }
+
+            nav ul {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .header-container {
+                padding: 0 20px;
+            }
+
+            main {
+                padding: 40px 20px;
+            }
+
+            .about-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .about-image {
+                margin-bottom: 30px;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .boxes-container {
+                grid-template-columns: 1fr;
+            }
+
+            .about-section {
+                padding: 30px 20px;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+        }
+
+        /* 22. Floating Back to Top Button */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: var(--gradient);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            z-index: 999;
+        }
+
+        .back-to-top.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-5px);
+        }
+
+        /* 23. Loading Animation */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-darker);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s, visibility 0.5s;
+        }
+
+        .loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* 24. Animation Classes */
+        .fade-in {
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .slide-up {
+            animation: slideUp 0.8s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* 25. Utility Classes */
+        .text-gradient {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            background: var(--primary);
+            color: white;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+
+        .divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 30px 0;
+        }
+    </style>
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- 26. Loading Screen -->
+    <div class="loader">
+        <div class="loader-spinner"></div>
+    </div>
+
+    <!-- Header -->
+    <header id="header">
+        <div class="header-container">
+            <a href="#" class="logo">
+                <div class="logo-icon">M</div>
+                <div class="logo-text">Moizz Studio</div>
+            </a>
+            
+            <button class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <nav id="mainNav">
+                <ul>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#quick-access">Quick Access</a></li>
+                    <li><a href="#social">Social Media</a></li>
+                    <li><a href="#" onclick="showModal('contact-modal')">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="fade-in">
+        <!-- Quick Access Section -->
+        <section id="quick-access">
+            <h2 class="section-title slide-up">Quick Access</h2>
+            <div class="boxes-container">
+                <!-- Portfolio Box -->
+                <div class="box slide-up" style="animation-delay: 0.1s;">
+                    <div class="box-icon">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <div class="box-content">
+                        <h3>Portfolio <span class="badge">NEW</span></h3>
+                        <p>Explore my latest projects and creative works in this curated collection.</p>
+                    </div>
+                    <a href="portfolio.html" class="box-btn">VISIT <i class="fas fa-arrow-right"></i></a>
+                </div>
+                
+                <!-- Storage Box -->
+                <div class="box slide-up" style="animation-delay: 0.2s;">
+                    <div class="box-icon">
+                        <i class="fas fa-cloud"></i>
+                    </div>
+                    <div class="box-content">
+                        <h3>Cloud Storage</h3>
+                        <p>Access my digital library with resources, documents, and shared files.</p>
+                    </div>
+                    <a href="https://drive.google.com/drive/u/0/folders/19Is9t1HTq_IdI--OuPzFvudH8EyWAWvS" target="_blank" class="box-btn">VISIT <i class="fas fa-arrow-right"></i></a>
+                </div>
+                
+                <!-- Designs Box -->
+                <div class="box slide-up" style="animation-delay: 0.3s;">
+                    <div class="box-icon">
+                        <i class="fas fa-palette"></i>
+                    </div>
+                    <div class="box-content">
+                        <h3>Design Vault</h3>
+                        <p>Browse through my design assets, templates, and creative resources.</p>
+                    </div>
+                    <a href="https://drive.google.com/drive/u/0/folders/1F8m-Ax8GOhFhE6uO_Ei_7xmxmNVlwvto" target="_blank" class="box-btn">VISIT <i class="fas fa-arrow-right"></i></a>
+                </div>
+                
+                <!-- Command Center Box -->
+                <div class="box slide-up" style="animation-delay: 0.4s;">
+                    <div class="box-icon">
+                        <i class="fas fa-terminal"></i>
+                    </div>
+                    <div class="box-content">
+                        <h3>Command Center</h3>
+                        <p>Advanced tools and utilities for power users and collaborators.</p>
+                    </div>
+                    <a href="next.html" class="box-btn">VISIT <i class="fas fa-arrow-right"></i></a>
+                </div>
+                
+                <!-- Control Center Box -->
+                <div class="box slide-up" style="animation-delay: 0.5s;">
+                    <div class="box-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <div class="box-content">
+                        <h3>Control Hub <span class="badge">PRO</span></h3>
+                        <p>Restricted access area for administrative functions and settings.</p>
+                    </div>
+                    <button onclick="showModal('no-permission')" class="box-btn">REQUEST ACCESS <i class="fas fa-lock"></i></button>
+                </div>
+                
+                <!-- Achievements Box -->
+                <div class="box slide-up" style="animation-delay: 0.6s;">
+                    <div class="box-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="box-content">
+                        <h3>Achievements</h3>
+                        <p>My milestones, certifications, and notable accomplishments.</p>
+                    </div>
+                    <button onclick="showModal('no-achievements')" class="box-btn">VIEW <i class="fas fa-trophy"></i></button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- About Section -->
+        <section id="about" class="about-section slide-up" style="animation-delay: 0.7s;">
+            <div class="about-content">
+                <div class="about-image">
+                    <img src="profile.png" alt="!!!">
+                </div>
+                <div class="about-text">
+                    <h2>About <span class="text-gradient">Moizz Shahid</span></h2>
+                    <p>Creative technologist and digital enthusiast with a passion for building immersive experiences and solving complex problems through design and code.</p>
+                    
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <i class="fas fa-user"></i>
+                            <span>Moizz Shahid</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-graduation-cap"></i>
+                            <span>Class 10 Student</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Pakistan</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-code"></i>
+                            <span>Make Code with AI</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-paint-brush"></i>
+                            <span>Graphic Designer</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-bars"></i>
+                            <span>More</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Social Media Section -->
+        <section id="social" class="social-section">
+            <h2 class="section-title slide-up" style="animation-delay: 0.8s;">Connect With Me</h2>
+            <div class="social-icons">
+                <a href="https://www.instagram.com/moizzshahid/" target="_blank" class="social-icon slide-up" style="animation-delay: 0.9s;">
+                    <div class="social-icon-box instagram">
+                        <i class="fab fa-instagram"></i>
+                    </div>
+                    <span>Instagram</span>
+                </a>
+                <a href="https://www.facebook.com/moiz.akskdr" target="_blank" class="social-icon slide-up" style="animation-delay: 1.0s;">
+                    <div class="social-icon-box facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </div>
+                    <span>Facebook</span>
+                </a>
+                <a href="mailto:moiz.akskdr@gmial.com" class="social-icon slide-up" style="animation-delay: 1.1s;">
+                    <div class="social-icon-box email">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <span>Email</span>
+                </a>
+                <a href="https://www.youtube.com/@-Moiz" target="_blank" class="social-icon slide-up" style="animation-delay: 1.2s;">
+                    <div class="social-icon-box youtube">
+                        <i class="fab fa-youtube"></i>
+                    </div>
+                    <span>YouTube</span>
+                </a>
+            </div>
+        </section>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="fade-in" style="animation-delay: 1.3s;">
+        <div class="footer-container">
+            <div class="footer-logo">
+                <img src="M-logo.png" alt="Moizz Studio Logo">
+            </div>
+            <div class="footer-text">
+                <p>Moizz Studio is my personal digital hub where I organize, create, and share my work with the world.</p>
+                <p>Everything you see here is crafted with passion and attention to detail.</p>
+            </div>
+            <div class="footer-links">
+                <a href="#about">About</a>
+                <a href="#quick-access">Quick Access</a>
+                <a href="#social">Social</a>
+                <a href="#" onclick="showModal('contact-modal')">Contact</a>
+                <a href="#" onclick="showModal('privacy-modal')">Privacy</a>
+            </div>
+            <div class="copyright">
+                &copy; 2025 Moizz Studio. All rights reserved. | Developed with DeepSeek by Moizz Shahid
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Back to Top Button -->
+    <div class="back-to-top" id="backToTop">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+    
+    <!-- Modals -->
+    <!-- No Permission Modal -->
+    <div id="no-permission" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('no-permission')">&times;</span>
+            <div class="modal-icon">
+                <i class="fas fa-lock"></i>
+            </div>
+            <h3>Access Restricted</h3>
+            <p>This area requires special permissions. Please contact me if you need access to these features.</p>
+            <button class="modal-btn" onclick="closeModal('no-permission')">Understood</button>
+        </div>
+    </div>
+    
+    <!-- No Achievements Modal -->
+    <div id="no-achievements" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('no-achievements')">&times;</span>
+            <div class="modal-icon">
+                <i class="fas fa-trophy"></i>
+            </div>
+            <h3>Achievements Not found</h3>
+            <p>You dont have any Achievement to display here... May be next time!</p>
+            <button class="modal-btn" onclick="closeModal('no-achievements')">Got It</button>
+        </div>
+    </div>
+    
+    <!-- Contact Modal -->
+    <div id="contact-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('contact-modal')">&times;</span>
+            <div class="modal-icon">
+                <i class="fas fa-envelope"></i>
+            </div>
+            <h3>Get In Touch</h3>
+            <p>Have a question or want to work together? Reach out through my social media or email.</p>
+            <div style="margin: 25px 0;">
+                <a href="mailto:moizz@example.com" class="box-btn" style="display: inline-flex; margin: 5px;">
+                    <i class="fas fa-envelope"></i> Email Me
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Privacy Modal -->
+    <div id="privacy-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('privacy-modal')">&times;</span>
+            <div class="modal-icon">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <h3>Privacy Policy</h3>
+            <p style="text-align: left; font-size: 14px; margin-bottom: 20px;">
+                This website is a personal project and doesn't collect any personal data. Any external links may have their own privacy policies.
+                <br><br>
+                Third-party services like Google Drive (for storage links) may use cookies. Please review their policies if you have concerns.
+            </p>
+            <button class="modal-btn" onclick="closeModal('privacy-modal')">I Understand</button>
+        </div>
+    </div>
+    
+    <!-- JavaScript -->
+    <script>
+        // 27. Loading Screen Removal
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.querySelector('.loader').classList.add('hidden');
+            }, 1000);
+        });
+
+        // 28. Header Scroll Effect
+        const header = document.getElementById('header');
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // 29. Mobile Menu Toggle
+        const menuToggle = document.getElementById('menuToggle');
+        const mainNav = document.getElementById('mainNav');
+        
+        menuToggle.addEventListener('click', function() {
+            mainNav.classList.toggle('active');
+            menuToggle.innerHTML = mainNav.classList.contains('active') ? 
+                '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+        });
+
+        // 30. Smooth Scrolling for Anchor Links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                if (this.getAttribute('href') === '#') return;
+                
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    window.scrollTo({
+                        top: target.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Close mobile menu if open
+                    if (mainNav.classList.contains('active')) {
+                        mainNav.classList.remove('active');
+                        menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                    }
+                }
+            });
+        });
+
+        // 31. Back to Top Button
+        const backToTop = document.getElementById('backToTop');
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 300) {
+                backToTop.classList.add('active');
+            } else {
+                backToTop.classList.remove('active');
+            }
+        });
+        
+        backToTop.addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // 32. Modal Functions
+        function showModal(modalId) {
+            document.getElementById(modalId).classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('show');
+            document.body.style.overflow = 'auto';
+        }
+        
+        // Close modal when clicking outside
+        window.addEventListener('click', function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.classList.remove('show');
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // 33. Animation on Scroll
+        function animateOnScroll() {
+            const elements = document.querySelectorAll('.slide-up, .fade-in');
+            
+            elements.forEach(element => {
+                const elementPosition = element.getBoundingClientRect().top;
+                const screenPosition = window.innerHeight / 1.2;
+                
+                if (elementPosition < screenPosition) {
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateY(0)';
+                }
+            });
+        }
+        
+        // Set initial state for animated elements
+        document.querySelectorAll('.slide-up').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        });
+        
+        document.querySelectorAll('.fade-in').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transition = 'opacity 0.6s ease';
+        });
+        
+        window.addEventListener('load', animateOnScroll);
+        window.addEventListener('scroll', animateOnScroll);
+
+        // 34. Dynamic Year in Footer
+        document.querySelector('.copyright').innerHTML = 
+            document.querySelector('.copyright').innerHTML.replace('2023', new Date().getFullYear());
+    </script>
+</body>
+</html>
