@@ -163,7 +163,24 @@
       try { setTheme(localStorage.getItem('webcmd-theme') || 'dark'); } catch { setTheme('dark'); }
       const commands = {
         theme: args => setTheme((args[0] || '').toLowerCase()),
-        help: () => 'Available commands:\nhelp — show this guide\nclear — clear the screen\necho <text> — print text\nmath <expression> — calculate safely\ndate / time — show local date or time\nabout / version — app information\nquote — random motivational quote\ntodo add <task> — save a task\ntodo list — show saved tasks\ntodo clear — remove saved tasks\nwhoami — show current workspace user',
+        help: () => [
+          'Available commands:',
+          'help — show this guide',
+          'clear — clear the screen',
+          'echo <text> — print text',
+          'math <expression> — calculate safely',
+          'date / time — show local date or time',
+          'about / version — app information',
+          'quote — random motivational quote',
+          'todo add <task> — save a task',
+          'todo list — show saved tasks',
+          'todo clear — remove saved tasks',
+          'theme dark|light — switch appearance',
+          'history — list recent commands',
+          'count <text> — count words and characters',
+          'reverse <text> — reverse text',
+          'whoami — show current workspace user'
+        ].join(String.fromCharCode(10)),
         history: () => history.length ? history.map((entry, index) => (index + 1) + '. ' + entry).join('\\n') : 'No commands in history yet.',
         count: args => {
           const text = args.join(' ');
