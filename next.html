@@ -11,7 +11,7 @@
             font-family: 'Courier New', monospace;
             margin: 0;
             padding: 20px;
-            line-height: 1.4;
+            line-height: 1.6;\n            overflow-wrap: anywhere;
         }
         .terminal {
             max-width: 800px;
@@ -38,7 +38,7 @@
         .prompt {
             color: #4caf50;
         }
-        .input-line {
+        #output {\n            white-space: pre-wrap;\n            overflow-wrap: anywhere;\n            margin-bottom: 12px;\n        }\n        .input-line {
             display: flex;
         }
         .input-line input {
@@ -103,7 +103,7 @@
                 execute: () => {
                     let helpText = "Available commands:<br>";
                     for (const [cmd, info] of Object.entries(commands)) {
-                        helpText += `- ${cmd}: ${info.desc}<br>`;
+                        helpText += `- ${cmd}: ${info.desc}\\n`;
                     }
                     return helpText;
                 }
@@ -131,7 +131,7 @@
                 execute: (args) => {
                     if (!args) return "Please provide an expression (e.g., 'math 2+2')";
                     try {
-                        return eval(args.join(' '));
+                        return evaluateMath(args.join(' '));
                     } catch {
                         return "Invalid math expression";
                     }
@@ -276,7 +276,7 @@
                         return `Added: ${args.slice(1).join(' ')}`;
                     } else if (args[0] === 'list') {
                         if (window.todos.length === 0) return "Your todo list is empty.";
-                        return window.todos.map((t, i) => `${i+1}. ${t}`).join('<br>');
+                        return window.todos.map((t, i) => `${i+1}. ${t}`).join('\\n');
                     } else if (args[0] === 'clear') {
                         window.todos = [];
                         return "Todo list cleared.";
@@ -345,7 +345,7 @@
                 commandInput.value = '';
                 
                 // Add the command to output
-                addToOutput(`<span class="prompt">></span> ${input}`);
+                addToOutput(`> ${input}`);
                 
                 if (!input) return;
                 
@@ -379,7 +379,7 @@
         function addToOutput(text) {
             if (text) {
                 const div = document.createElement('div');
-                div.innerHTML = text;
+                div.textContent = text;
                 output.appendChild(div);
                 output.scrollTop = output.scrollHeight;
             }
