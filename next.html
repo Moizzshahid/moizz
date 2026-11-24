@@ -1,432 +1,204 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebCMD</title>
-    <style>
-        body {
-            background-color: #121212;
-            color: #c0c0c0;
-            font-family: 'Courier New', monospace;
-            margin: 0;
-            padding: 20px;
-            line-height: 1.6;\n            overflow-wrap: anywhere;
-        }
-        .terminal {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        .title-bar {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-        .dots {
-            display: flex;
-            margin-right: 10px;
-        }
-        .dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            margin-right: 6px;
-        }
-        .red { background-color: #ff5f56; }
-        .yellow { background-color: #ffbd2e; }
-        .green { background-color: #27c93f; }
-        .prompt {
-            color: #4caf50;
-        }
-        #output {\n            white-space: pre-wrap;\n            overflow-wrap: anywhere;\n            margin-bottom: 12px;\n        }\n        .input-line {
-            display: flex;
-        }
-        .input-line input {
-            flex-grow: 1;
-            background: transparent;
-            border: none;
-            color: #c0c0c0;
-            font-family: 'Courier New', monospace;
-            font-size: 1em;
-            outline: none;\n            min-width: 0;\n            padding: 8px;
-        }
-        .version {
-            color: #777;
-            margin-bottom: 20px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#090d16">
+  <meta name="description" content="WebCMD — a lightweight interactive command-line playground by Moizz.">
+  <title>WebCMD — Moizz</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #090d16;
+      --panel: #111827;
+      --panel-2: #0d1421;
+      --line: rgba(148,163,184,.16);
+      --text: #e5edf8;
+      --muted: #8290a5;
+      --green: #65e6a5;
+      --blue: #7aaeff;
+      --red: #ff7b86;
+      --shadow: 0 24px 80px rgba(0,0,0,.38);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh; padding: 36px 18px;
+      display: grid; place-items: center;
+      background: radial-gradient(ellipse at 15% 0%, rgba(54,105,170,.18), transparent 42%),
+                  radial-gradient(ellipse at 90% 100%, rgba(46,160,110,.12), transparent 38%), var(--bg);
+      color: var(--text); font: 14px/1.6 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+    button, input { font: inherit; }
+    .shell { width: min(920px, 100%); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; background: rgba(17,24,39,.94); box-shadow: var(--shadow); }
+    .topbar { display:flex; align-items:center; gap:14px; padding:15px 19px; background:rgba(255,255,255,.025); border-bottom:1px solid var(--line); }
+    .traffic { display:flex; gap:7px; }
+    .traffic i { width:11px; height:11px; border-radius:50%; display:block; }
+    .traffic i:nth-child(1){background:#ff6b6b}.traffic i:nth-child(2){background:#f7c65f}.traffic i:nth-child(3){background:#55d98b}
+    .brand { font-weight:700; letter-spacing:.04em; }
+    .brand span { color:var(--green); }
+    .top-meta { margin-left:auto; color:var(--muted); font-size:12px; }
+    .toolbar { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:17px 22px 12px; }
+    .heading { margin:0; font:600 18px/1.3 system-ui,sans-serif; letter-spacing:-.02em; }
+    .subheading { margin:4px 0 0; color:var(--muted); font:12px system-ui,sans-serif; }
+    .actions { display:flex; gap:8px; }
+    .tool-btn { border:1px solid var(--line); border-radius:8px; background:#172235; color:#cbd7e8; padding:7px 10px; cursor:pointer; font-size:12px; }
+    .tool-btn:hover { border-color:rgba(101,230,165,.5); color:white; }
+    .screen { height:420px; overflow:auto; padding:16px 22px 20px; scroll-behavior:smooth; }
+    .line { white-space:pre-wrap; overflow-wrap:anywhere; margin:0 0 7px; }
+    .line.system { color:var(--muted); }
+    .line.success { color:var(--green); }
+    .line.error { color:var(--red); }
+    .line.command { color:#dce7f7; }
+    .prompt { color:var(--green); margin-right:9px; }
+    .input-wrap { display:flex; align-items:center; gap:10px; margin:0 22px 17px; padding:12px 14px; border:1px solid rgba(101,230,165,.28); border-radius:10px; background:var(--panel-2); }
+    .input-wrap:focus-within { border-color:rgba(101,230,165,.7); box-shadow:0 0 0 3px rgba(101,230,165,.08); }
+    .prompt-label { color:var(--green); user-select:none; }
+    #command-input { width:100%; min-width:0; border:0; outline:0; background:transparent; color:var(--text); caret-color:var(--green); }
+    #command-input::placeholder { color:#64748b; }
+    .footer { display:flex; justify-content:space-between; gap:10px; padding:11px 22px; border-top:1px solid var(--line); color:var(--muted); font-size:11px; }
+    .status { color:var(--green); }
+    kbd { padding:2px 5px; border:1px solid var(--line); border-radius:4px; color:#b7c4d7; }
+    @media(max-width:600px) {
+      body { padding:12px 8px; align-items:start; }
+      .shell { border-radius:13px; }
+      .topbar { padding:12px 14px; }
+      .top-meta { font-size:10px; }
+      .toolbar { padding:15px 14px 10px; align-items:flex-start; }
+      .screen { height:55vh; min-height:300px; padding:14px; }
+      .input-wrap { margin:0 14px 14px; }
+      .footer { padding:10px 14px; flex-wrap:wrap; }
+    }
+    @media(prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto!important; transition:none!important; animation:none!important; } }
+  </style>
 </head>
 <body>
-    <div class="terminal">
-        <div class="title-bar">
-            <div class="dots">
-                <div class="dot red"></div>
-                <div class="dot yellow"></div>
-                <div class="dot green"></div>
-            </div>
-            <div>WebCMD</div>
-        </div>
-        <div class="version">Moizz CMD v3.0.1 - A minimal command-line interface in your browser</div>
-        <div id="output">
-            <div>Type "help" for a list of available commands.</div>
-            <div>Type "start" to begin.</div>
-        </div>
-        <div class="input-line">
-            <span class="prompt">></span>
-            <input type="text" id="command-input" aria-label="Enter terminal command" autocomplete="off" spellcheck="false" autofocus>
-        </div>
-    </div>
+  <main class="shell" aria-label="WebCMD terminal">
+    <header class="topbar">
+      <div class="traffic" aria-hidden="true"><i></i><i></i><i></i></div>
+      <div class="brand">MOIZZ <span>/</span> WEBCMD</div>
+      <div class="top-meta">BROWSER TERMINAL · v4.0</div>
+    </header>
+    <section class="toolbar">
+      <div><h1 class="heading">Command workspace</h1><p class="subheading">A small interactive playground. No real system commands are executed.</p></div>
+      <div class="actions"><button class="tool-btn" id="help-btn" type="button">Help</button><button class="tool-btn" id="clear-btn" type="button">Clear</button></div>
+    </section>
+    <section class="screen" id="output" role="log" aria-live="polite" aria-label="Terminal output">
+      <p class="line system">Welcome to WebCMD. Type <strong>help</strong> to see what you can do.</p>
+      <p class="line success">Ready · session active</p>
+    </section>
+    <form class="input-wrap" id="command-form" autocomplete="off">
+      <label class="prompt-label" for="command-input">moizz@webcmd:~$</label>
+      <input id="command-input" name="command" type="text" placeholder="Type a command…" spellcheck="false" autofocus aria-label="Terminal command">
+    </form>
+    <footer class="footer"><span><span class="status">● ONLINE</span> · Local browser session</span><span><kbd>↑</kbd> <kbd>↓</kbd> history · <kbd>Tab</kbd> autocomplete</span></footer>
+  </main>
+  <script>
+    (() => {
+      const output = document.getElementById('output');
+      const input = document.getElementById('command-input');
+      const form = document.getElementById('command-form');
+      const history = [];
+      let historyIndex = 0;
+      let todos = [];
+      try { todos = JSON.parse(localStorage.getItem('webcmd-todos') || '[]'); if (!Array.isArray(todos)) todos = []; } catch { todos = []; }
 
-    <script>
-        const output = document.getElementById('output');
-        const commandInput = document.getElementById('command-input');
-        let sessionActive = false;\n        const commandHistory = [];\n        let historyIndex = 0;
-
-        // Parse arithmetic with a small grammar; never execute user input as JavaScript.
-        function evaluateMath(expression) {
-            const tokens = expression.match(/\d+(?:\.\d+)?|[()+\-*/%]/g) || [];
-            const compact = expression.replace(/\s+/g, '');
-            if (!tokens.length || tokens.join('') !== compact) throw new Error('Invalid expression');
-
-            let index = 0;
-            function factor() {
-                const token = tokens[index++];
-                if (token === '+') return factor();
-                if (token === '-') return -factor();
-                if (token === '(') {
-                    const value = sum();
-                    if (tokens[index++] !== ')') throw new Error('Missing closing parenthesis');
-                    return value;
-                }
-                if (!token || !/^\d+(?:\.\d+)?$/.test(token)) throw new Error('Expected a number');
-                return Number(token);
-            }
-            function product() {
-                let value = factor();
-                while (['*', '/', '%'].includes(tokens[index])) {
-                    const operator = tokens[index++];
-                    const right = factor();
-                    if ((operator === '/' || operator === '%') && right === 0) throw new Error('Cannot divide by zero');
-                    value = operator === '*' ? value * right : operator === '/' ? value / right : value % right;
-                }
-                return value;
-            }
-            function sum() {
-                let value = product();
-                while (tokens[index] === '+' || tokens[index] === '-') {
-                    const operator = tokens[index++];
-                    const right = product();
-                    value = operator === '+' ? value + right : value - right;
-                }
-                return value;
-            }
-            const result = sum();
-            if (index !== tokens.length || !Number.isFinite(result)) throw new Error('Invalid expression');
-            return Number(result.toFixed(10));
+      function print(message, kind = '') {
+        if (message === '' || message === null || message === undefined) return;
+        const row = document.createElement('p');
+        row.className = 'line' + (kind ? ' ' + kind : '');
+        row.textContent = String(message);
+        output.appendChild(row);
+        output.scrollTop = output.scrollHeight;
+      }
+      function clearScreen() { output.replaceChildren(); }
+      function saveTodos() {
+        try { localStorage.setItem('webcmd-todos', JSON.stringify(todos)); }
+        catch { print('Could not save tasks in this browser.', 'error'); }
+      }
+      function calculate(source) {
+        const tokens = source.match(/\d+(?:\.\d+)?|[()+\-*/%]/g) || [];
+        if (!tokens.length || tokens.join('') !== source.replace(/\s+/g, '')) throw new Error('Use numbers and + - * / % ( ) only.');
+        let i = 0;
+        function factor() {
+          const token = tokens[i++];
+          if (token === '+') return factor();
+          if (token === '-') return -factor();
+          if (token === '(') { const value = sum(); if (tokens[i++] !== ')') throw new Error('Missing closing parenthesis.'); return value; }
+          if (!token || !/^\d+(?:\.\d+)?$/.test(token)) throw new Error('Invalid expression.');
+          return Number(token);
         }
-
-        // Command definitions
-        const commands = {
-            start: {
-                desc: "Start the session",
-                execute: () => {
-                    sessionActive = true;
-                    return "Session started. Type 'help' for commands.";
-                }
-            },
-            close: {
-                desc: "Close the session",
-                execute: () => {
-                    sessionActive = false;
-                    return "Session closed. Type 'start' to begin again.";
-                }
-            },
-            help: {
-                desc: "Show available commands",
-                execute: () => {
-                    let helpText = "Available commands:<br>";
-                    for (const [cmd, info] of Object.entries(commands)) {
-                        helpText += `- ${cmd}: ${info.desc}\\n`;
-                    }
-                    return helpText;
-                }
-            },
-            time: {
-                desc: "Show current time",
-                execute: () => {
-                    return new Date().toLocaleTimeString();
-                }
-            },
-            date: {
-                desc: "Show current date",
-                execute: () => {
-                    return new Date().toLocaleDateString();
-                }
-            },
-            location: {
-                desc: "Show current location",
-                execute: () => {
-                    return "Karachi, Pakistan";
-                }
-            },
-            math: {
-                desc: "Do simple math (e.g., 'math 2+2')",
-                execute: (args) => {
-                    if (!args) return "Please provide an expression (e.g., 'math 2+2')";
-                    try {
-                        return evaluateMath(args.join(' '));
-                    } catch {
-                        return "Invalid math expression";
-                    }
-                }
-            },
-            echo: {
-                desc: "Repeat back the input",
-                execute: (args) => {
-                    return args.join(' ');
-                }
-            },
-            describe: {
-                desc: "Describe something",
-                execute: (args) => {
-                    if (!args.length) return "Please provide something to describe";
-                    const things = {
-                        you: "I am a simple command-line interface.",
-                        me: "You are an awesome person using this interface!",
-                        this: "This is a minimal CMD-like interface in your browser.",
-                        karachi: "Karachi is the largest city in Pakistan and a major economic hub.",
-                        pakistan: "Pakistan is a country in South Asia with a rich cultural heritage."
-                    };
-                    const thing = args[0].toLowerCase();
-                    return things[thing] || `I don't know how to describe "${thing}"`;
-                }
-            },
-            joke: {
-                desc: "Tell a joke",
-                execute: () => {
-                    const jokes = [
-                        "Why don't scientists trust atoms? Because they make up everything!",
-                        "Did you hear about the mathematician who's afraid of negative numbers? He'll stop at nothing to avoid them.",
-                        "Why don't skeletons fight each other? They don't have the guts.",
-                        "I'm reading a book about anti-gravity. It's impossible to put down!",
-                        "Why did the scarecrow win an award? Because he was outstanding in his field!"
-                    ];
-                    return jokes[Math.floor(Math.random() * jokes.length)];
-                }
-            },
-            clear: {
-                desc: "Clear the screen",
-                execute: () => {
-                    output.innerHTML = '';
-                    return '';
-                }
-            },
-            weather: {
-                desc: "Get weather information",
-                execute: () => {
-                    return "Weather in Karachi: Usually sunny and hot (25-35°C)";
-                }
-            },
-            version: {
-                desc: "Show version information",
-                execute: () => {
-                    return "WebCMD v1.0 - Minimal command-line interface";
-                }
-            },
-            about: {
-                desc: "About this interface",
-                execute: () => {
-                    return "This is a minimal CMD-like interface built with HTML, CSS, and JavaScript.";
-                }
-            },
-            color: {
-                desc: "Change text color (e.g., 'color green')",
-                execute: (args) => {
-                    const colors = {
-                        red: "#ff5555",
-                        green: "#55ff55",
-                        blue: "#5555ff",
-                        yellow: "#ffff55",
-                        reset: "#c0c0c0"
-                    };
-                    const color = args[0] || 'reset';
-                    if (colors[color]) {
-                        document.body.style.color = colors[color];
-                        return `Text color changed to ${color}`;
-                    }
-                    return `Invalid color. Available: ${Object.keys(colors).join(', ')}`;
-                }
-            },
-            greet: {
-                desc: "Greet the user",
-                execute: () => {
-                    const hours = new Date().getHours();
-                    if (hours < 12) return "Good morning!";
-                    if (hours < 18) return "Good afternoon!";
-                    return "Good evening!";
-                }
-            },
-            reverse: {
-                desc: "Reverse the input text",
-                execute: (args) => {
-                    return args.join(' ').split('').reverse().join('');
-                }
-            },
-            uppercase: {
-                desc: "Convert text to uppercase",
-                execute: (args) => {
-                    return args.join(' ').toUpperCase();
-                }
-            },
-            lowercase: {
-                desc: "Convert text to lowercase",
-                execute: (args) => {
-                    return args.join(' ').toLowerCase();
-                }
-            },
-            count: {
-                desc: "Count the number of words",
-                execute: (args) => {
-                    return `Word count: ${args.length}`;
-                }
-            },
-            quote: {
-                desc: "Show a random quote",
-                execute: () => {
-                    const quotes = [
-                        "The only way to do great work is to love what you do. - Steve Jobs",
-                        "Innovation distinguishes between a leader and a follower. - Steve Jobs",
-                        "Stay hungry, stay foolish. - Steve Jobs",
-                        "Your time is limited, don't waste it living someone else's life. - Steve Jobs",
-                        "Simplicity is the ultimate sophistication. - Leonardo da Vinci"
-                    ];
-                    return quotes[Math.floor(Math.random() * quotes.length)];
-                }
-            },
-            ping: {
-                desc: "Test responsiveness",
-                execute: () => {
-                    return "Pong!";
-                }
-            },
-            todo: {
-                desc: "Simple todo list (add, list, clear)",
-                execute: (args) => {
-                    if (!window.todos) window.todos = [];
-                    
-                    if (args[0] === 'add' && args.length > 1) {
-                        window.todos.push(args.slice(1).join(' '));
-                        return `Added: ${args.slice(1).join(' ')}`;
-                    } else if (args[0] === 'list') {
-                        if (window.todos.length === 0) return "Your todo list is empty.";
-                        return window.todos.map((t, i) => `${i+1}. ${t}`).join('\\n');
-                    } else if (args[0] === 'clear') {
-                        window.todos = [];
-                        return "Todo list cleared.";
-                    }
-                    return "Usage: todo [add|list|clear]";
-                }
-            },
-            fact: {
-                desc: "Show a random fact",
-                execute: () => {
-                    const facts = [
-                        "Honey never spoils. Archaeologists have found pots of honey in ancient Egyptian tombs that are over 3,000 years old and still perfectly good to eat.",
-                        "The shortest war in history was between Britain and Zanzibar on August 27, 1896. Zanzibar surrendered after 38 minutes.",
-                        "A group of flamingos is called a 'flamboyance'.",
-                        "The inventor of the frisbee was turned into a frisbee after he died.",
-                        "Octopuses have three hearts, nine brains, and blue blood."
-                    ];
-                    return facts[Math.floor(Math.random() * facts.length)];
-                }
-            },
-            calc: {
-                desc: "Simple calculator (e.g., 'calc 5*5')",
-                execute: (args) => {
-                    if (!args.length) return "Please provide an expression (e.g., 'calc 5*5')";
-                    try {
-                        return evaluateMath(args.join(' '));
-                    } catch {
-                        return "Invalid calculation";
-                    }
-                }
-            },
-            rps: {
-                desc: "Play rock-paper-scissors",
-                execute: (args) => {
-                    const choices = ['rock', 'paper', 'scissors'];
-                    const userChoice = args[0] ? args[0].toLowerCase() : null;
-                    
-                    if (!userChoice || !choices.includes(userChoice)) {
-                        return "Please choose rock, paper, or scissors";
-                    }
-                    
-                    const computerChoice = choices[Math.floor(Math.random() * 3)];
-                    let result;
-                    
-                    if (userChoice === computerChoice) {
-                        result = "It's a tie!";
-                    } else if (
-                        (userChoice === 'rock' && computerChoice === 'scissors') ||
-                        (userChoice === 'paper' && computerChoice === 'rock') ||
-                        (userChoice === 'scissors' && computerChoice === 'paper')
-                    ) {
-                        result = "You win!";
-                    } else {
-                        result = "Computer wins!";
-                    }
-                    
-                    return `You chose ${userChoice}, computer chose ${computerChoice}. ${result}`;
-                }
-            }
-        };
-
-        // Handle command input
-        commandInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                const input = commandInput.value.trim();
-                commandInput.value = '';
-                
-                // Add the command to output
-                addToOutput(`> ${input}`);
-                
-                if (!input) return;
-                
-                const parts = input.split(' ');
-                const cmd = parts[0].toLowerCase();
-                const args = parts.slice(1);
-                
-                // Special case for echo close
-                if (cmd === 'echo' && args[0] === 'close') {
-                    sessionActive = false;
-                    addToOutput("Session closed. Type 'start' to begin again.");
-                    return;
-                }
-                
-                // Check if session is active (except for start and help commands)
-                if (!sessionActive && cmd !== 'start' && cmd !== 'help') {
-                    addToOutput("Session not active. Type 'start' to begin.");
-                    return;
-                }
-                
-                // Execute command
-                if (commands[cmd]) {
-                    const result = commands[cmd].execute(args);
-                    if (result) addToOutput(result);
-                } else {
-                    addToOutput(`Command not found: ${cmd}. Type 'help' for available commands.`);
-                }
-            }
-        });
-
-        function addToOutput(text) {
-            if (text) {
-                const div = document.createElement('div');
-                div.textContent = text;
-                output.appendChild(div);
-                output.scrollTop = output.scrollHeight;
-            }
+        function product() {
+          let value = factor();
+          while (['*','/','%'].includes(tokens[i])) {
+            const op = tokens[i++], right = factor();
+            if ((op === '/' || op === '%') && right === 0) throw new Error('Cannot divide by zero.');
+            value = op === '*' ? value * right : op === '/' ? value / right : value % right;
+          }
+          return value;
         }
-    </script>
+        function sum() {
+          let value = product();
+          while (tokens[i] === '+' || tokens[i] === '-') { const op = tokens[i++], right = product(); value = op === '+' ? value + right : value - right; }
+          return value;
+        }
+        const result = sum();
+        if (i !== tokens.length || !Number.isFinite(result)) throw new Error('Invalid expression.');
+        return Number(result.toFixed(10));
+      }
+      const commands = {
+        help: () => 'Available commands:\nhelp — show this guide\nclear — clear the screen\necho <text> — print text\nmath <expression> — calculate safely\ndate / time — show local date or time\nabout / version — app information\nquote — random motivational quote\ntodo add <task> — save a task\ntodo list — show saved tasks\ntodo clear — remove saved tasks\nwhoami — show current workspace user',
+        clear: () => { clearScreen(); return ''; },
+        echo: args => args.join(' ') || '(empty)',
+        math: args => calculate(args.join(' ')),
+        calc: args => calculate(args.join(' ')),
+        date: () => new Date().toLocaleDateString(undefined, { dateStyle:'full' }),
+        time: () => new Date().toLocaleTimeString(),
+        about: () => 'WebCMD is a browser-based command playground built with HTML, CSS and JavaScript. It is not a real operating-system terminal.',
+        version: () => 'WebCMD 4.0 · Moizz · Vanilla HTML/CSS/JavaScript',
+        whoami: () => 'moizz — WebCMD workspace user',
+        quote: () => ['Small steps every day add up to big results.','Make it work, make it right, make it better.','Great things are built one commit at a time.'][Math.floor(Math.random()*3)],
+        todo: args => {
+          const action = (args[0] || '').toLowerCase();
+          if (action === 'add' && args.slice(1).length) { const task=args.slice(1).join(' '); todos.push(task); saveTodos(); return 'Added: ' + task; }
+          if (action === 'list') return todos.length ? todos.map((task,index)=>(index+1)+'. '+task).join('\n') : 'Your task list is empty.';
+          if (action === 'clear') { todos=[]; saveTodos(); return 'Task list cleared.'; }
+          return 'Usage: todo add <task> | todo list | todo clear';
+        }
+      };
+      function run(raw) {
+        const value = raw.trim();
+        if (!value) return;
+        print('moizz@webcmd:~$ ' + value, 'command');
+        const parts = value.match(/"[^"]*"|'[^']*'|\S+/g) || [];
+        const name = parts.shift().toLowerCase();
+        const args = parts.map(part => part.replace(/^['"]|['"]$/g, ''));
+        if (!Object.prototype.hasOwnProperty.call(commands, name)) { print('Command not found: ' + name + '. Type "help".', 'error'); return; }
+        try { const result = commands[name](args); if (result) print(result, 'success'); }
+        catch (error) { print(error.message || 'Command failed.', 'error'); }
+      }
+      form.addEventListener('submit', event => {
+        event.preventDefault();
+        const value = input.value;
+        if (value.trim()) { history.push(value); historyIndex = history.length; run(value); }
+        input.value = '';
+      });
+      input.addEventListener('keydown', event => {
+        if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+          event.preventDefault();
+          historyIndex = event.key === 'ArrowUp' ? Math.max(0, historyIndex-1) : Math.min(history.length, historyIndex+1);
+          input.value = history[historyIndex] || '';
+        }
+        if (event.key === 'Tab') {
+          event.preventDefault();
+          const prefix = input.value.trim().toLowerCase();
+          const match = Object.keys(commands).find(name => name.startsWith(prefix));
+          if (match) input.value = match;
+        }
+      });
+      document.getElementById('help-btn').addEventListener('click', () => { input.value='help'; run(input.value); input.value=''; input.focus(); });
+      document.getElementById('clear-btn').addEventListener('click', () => { clearScreen(); input.focus(); });
+      document.addEventListener('click', event => { if (!event.target.closest('button')) input.focus(); });
+    })();
+  </script>
 </body>
 </html>
