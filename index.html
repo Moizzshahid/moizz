@@ -572,21 +572,21 @@
                 modal.classList.add('show');
             });
 
-            // 4. Modal button redirects to Google
-            modalBtn.addEventListener('click', function() {
+            // 4. Close the informational modal without unexpected navigation
+            function closeModal() {
                 modal.classList.remove('show');
-                setTimeout(() => {
-                    window.location.href = "https://google.com";
-                }, 300);
+            }
+
+            modalBtn.addEventListener('click', closeModal);
+
+            // 5. Close the modal with its backdrop or the Escape key
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) closeModal();
             });
 
-            // 5. Close modal when clicking outside
-            modal.addEventListener('click', function(e) {
-                if (e.target === modal) {
-                    modal.classList.remove('show');
-                    setTimeout(() => {
-                        window.location.href = "https://google.com";
-                    }, 300);
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && modal.classList.contains('show')) {
+                    closeModal();
                 }
             });
 
