@@ -90,7 +90,7 @@
       <label class="prompt-label" for="command-input">moizz@webcmd:~$</label>
       <input id="command-input" name="command" type="text" placeholder="Type a command…" spellcheck="false" autofocus aria-label="Terminal command">
     </form>
-    <footer class="footer"><span><span class="status">● ONLINE</span> · Local browser session</span><span><kbd>↑</kbd> <kbd>↓</kbd> history · <kbd>Tab</kbd> autocomplete</span></footer>
+    <footer class="footer"><span><span class="status">● ONLINE</span> · Local browser session</span><span><kbd>↑</kbd> <kbd>↓</kbd> history · <kbd>Tab</kbd> autocomplete · <kbd>Ctrl L</kbd> clear · <kbd>Ctrl K</kbd> focus</span></footer>
   </main>
   <script>
     (() => {
@@ -233,6 +233,20 @@
           const prefix = input.value.trim().toLowerCase();
           const match = Object.keys(commands).find(name => name.startsWith(prefix));
           if (match) input.value = match;
+        }
+      });
+      // Global shortcuts: Ctrl/Cmd+L clears output; Ctrl/Cmd+K focuses the prompt.
+      document.addEventListener('keydown', event => {
+        const modifier = event.ctrlKey || event.metaKey;
+        if (!modifier) return;
+        const key = event.key.toLowerCase();
+        if (key === 'l') {
+          event.preventDefault();
+          clearScreen();
+          input.focus();
+        } else if (key === 'k') {
+          event.preventDefault();
+          input.focus();
         }
       });
       document.getElementById('help-btn').addEventListener('click', () => { input.value='help'; run(input.value); input.value=''; input.focus(); });
