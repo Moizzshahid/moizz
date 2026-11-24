@@ -1148,7 +1148,26 @@
                 grid-template-columns: 1fr;
             }
         }
-    </style>
+    
+        /* Keyboard accessibility and motion preferences */
+        :focus-visible {
+            outline: 3px solid var(--accent);
+            outline-offset: 4px;
+            border-radius: 4px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                scroll-behavior: auto !important;
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+</style>
 </head>
 <body>
     <!-- Preloader -->
