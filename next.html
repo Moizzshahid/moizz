@@ -48,7 +48,7 @@
             color: #c0c0c0;
             font-family: 'Courier New', monospace;
             font-size: 1em;
-            outline: none;
+            outline: none;\n            min-width: 0;\n            padding: 8px;
         }
         .version {
             color: #777;
@@ -73,14 +73,14 @@
         </div>
         <div class="input-line">
             <span class="prompt">></span>
-            <input type="text" id="command-input" autofocus>
+            <input type="text" id="command-input" aria-label="Enter terminal command" autocomplete="off" spellcheck="false" autofocus>
         </div>
     </div>
 
     <script>
         const output = document.getElementById('output');
         const commandInput = document.getElementById('command-input');
-        let sessionActive = false;
+        let sessionActive = false;\n        const commandHistory = [];\n        let historyIndex = 0;
 
         // Command definitions
         const commands = {
