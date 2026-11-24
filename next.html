@@ -145,7 +145,24 @@
         if (i !== tokens.length || !Number.isFinite(result)) throw new Error('Invalid expression.');
         return Number(result.toFixed(10));
       }
+      function setTheme(mode) {
+        const root = document.documentElement;
+        const themes = {
+          dark: { bg:'#090d16', panel:'#111827', panel2:'#0d1421', line:'rgba(148,163,184,.16)', text:'#e5edf8', muted:'#8290a5' },
+          light: { bg:'#eef2f8', panel:'#ffffff', panel2:'#f7f9fc', line:'rgba(71,85,105,.2)', text:'#172033', muted:'#64748b' }
+        };
+        const selected = themes[mode];
+        if (!selected) return 'Usage: theme dark | theme light';
+        Object.entries(selected).forEach(([key, value]) => root.style.setProperty('--' + key, value));
+        document.body.style.background = mode === 'light'
+          ? 'radial-gradient(ellipse at 15% 0%, rgba(54,105,170,.10), transparent 42%), var(--bg)'
+          : 'radial-gradient(ellipse at 15% 0%, rgba(54,105,170,.18), transparent 42%), radial-gradient(ellipse at 90% 100%, rgba(46,160,110,.12), transparent 38%), var(--bg)';
+        try { localStorage.setItem('webcmd-theme', mode); } catch {}
+        return 'Theme changed to ' + mode + '.';
+      }
+      try { setTheme(localStorage.getItem('webcmd-theme') || 'dark'); } catch { setTheme('dark'); }
       const commands = {
+        theme: args => setTheme((args[0] || '').toLowerCase()),
         help: () => 'Available commands:\nhelp — show this guide\nclear — clear the screen\necho <text> — print text\nmath <expression> — calculate safely\ndate / time — show local date or time\nabout / version — app information\nquote — random motivational quote\ntodo add <task> — save a task\ntodo list — show saved tasks\ntodo clear — remove saved tasks\nwhoami — show current workspace user',
         history: () => history.length ? history.map((entry, index) => (index + 1) + '. ' + entry).join('\\n') : 'No commands in history yet.',
         count: args => {
