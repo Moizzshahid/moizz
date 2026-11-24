@@ -24,3 +24,14 @@ Use this checklist when changing a page or its assets.
 - [ ] Revisit all pages after shared CSS or JavaScript changes.
 
 This is a manual checklist; it does not imply automated tests are configured.
+
+## Recent terminal improvements
+
+- [ ] Start a terminal session with `start`, then confirm `help` lists available commands.
+- [ ] Use `math` and `calc` with addition, subtraction, multiplication, division, parentheses, and decimals.
+- [ ] Confirm invalid expressions and division by zero show a safe error instead of executing JavaScript.
+- [ ] Press ArrowUp and ArrowDown in the command field to browse command history.
+- [ ] Confirm terminal output displays typed text literally and does not interpret it as HTML.
+- [ ] Check the terminal layout at narrow mobile widths.
+- [ ] Check portfolio links and controls with a keyboard, and verify reduced-motion settings are respected.
+- [ ] Verify contact links open the intended email address and the footer year is current.
