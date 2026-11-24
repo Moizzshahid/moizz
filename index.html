@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern Login Page</title>
+    <title>Moizz | Secure Login</title>
+    <meta name="description" content="Moizz personal digital workspace login experience.">
+    <meta name="theme-color" content="#20242b">
     <link rel="shortcut icon" href="tittle.png" type="image/x-icon">
     <style>
         * {
@@ -359,6 +361,44 @@
                 top: 20px;
                 left: 20px;
             }
+        }
+
+        /* Small-screen layout and accessible motion */
+        @media (max-width: 480px) {
+            body {
+                min-height: 100svh;
+                height: auto;
+                padding: 110px 16px 24px;
+                overflow-x: hidden;
+                overflow-y: auto;
+                background-attachment: scroll;
+            }
+            .login-box {
+                width: 100%;
+                max-width: 420px;
+                padding: 26px 20px;
+                border-radius: 20px;
+            }
+            .login-header { margin-bottom: 26px; }
+            .login-header h1 { font-size: 24px; }
+            .button-group { gap: 10px; }
+            .button-group button { padding: 13px 10px; font-size: 15px; }
+            .m-logo { width: 58px; height: 58px; top: 18px; left: 18px; }
+        }
+
+        :focus-visible {
+            outline: 3px solid #4CAF50;
+            outline-offset: 3px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                scroll-behavior: auto !important;
+                transition-duration: 0.01ms !important;
+            }
+            .particles { display: none; }
         }
 
         /* 12. Animations */
