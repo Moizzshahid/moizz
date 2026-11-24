@@ -147,6 +147,12 @@
       }
       const commands = {
         help: () => 'Available commands:\nhelp — show this guide\nclear — clear the screen\necho <text> — print text\nmath <expression> — calculate safely\ndate / time — show local date or time\nabout / version — app information\nquote — random motivational quote\ntodo add <task> — save a task\ntodo list — show saved tasks\ntodo clear — remove saved tasks\nwhoami — show current workspace user',
+        history: () => history.length ? history.map((entry, index) => (index + 1) + '. ' + entry).join('\\n') : 'No commands in history yet.',
+        count: args => {
+          const text = args.join(' ');
+          return 'Characters: ' + text.length + ' | Words: ' + (text.trim() ? text.trim().split(/\\s+/).length : 0);
+        },
+        reverse: args => args.join(' ').split('').reverse().join(''),
         clear: () => { clearScreen(); return ''; },
         echo: args => args.join(' ') || '(empty)',
         math: args => calculate(args.join(' ')),
